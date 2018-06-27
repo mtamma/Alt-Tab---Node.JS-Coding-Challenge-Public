@@ -1,8 +1,9 @@
 'use strict';
 
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 
-let userAccountSchema = new mongoose.Schema({
+const userAccountSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -32,5 +33,15 @@ let userAccountSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+userAccountSchema.methods.setPassword = function (password) {
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, null).toString('hex');
+};
+
+userAccountSchema.methodes.isValidPassword = function (password) {
+    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, null).toString('hex');
+    return this.hash === hash;
+}
 
 mongoose.model('UserAccount', userAccountSchema);
