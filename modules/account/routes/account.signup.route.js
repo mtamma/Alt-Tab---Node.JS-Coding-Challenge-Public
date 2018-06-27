@@ -1,10 +1,7 @@
 'use strict';
 
-const accountCtrl = require('../controllers');
+const signupCtrl = require('../controllers').signupCtrl;
 
 module.exports = function (router) {
-    router.post('/register', accountCtrl);
+    router.post('/register', signupCtrl);
 };
-
-
-

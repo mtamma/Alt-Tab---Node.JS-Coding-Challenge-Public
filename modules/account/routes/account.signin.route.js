@@ -1,7 +1,7 @@
 'use strict';
 
-const accountCtrl = require('../controllers');
+const signinCtrl = require('../controllers').accountCtrl;
 
 module.exports = function (router) {
-    router.post('/login', accountCtrl);
-}
+    router.post('/login', signinCtrl);
+};
