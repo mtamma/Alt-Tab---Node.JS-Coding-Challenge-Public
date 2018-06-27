@@ -23,7 +23,7 @@ module.exports.disconnectDB = function () {
 };
 
 module.exports.loadModels = function (callback) {
-    require('../../account/model/account.model');
+    require('../../account/model').userAccount;
     if (callback) {
         callback();
     }

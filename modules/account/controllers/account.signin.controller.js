@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const UserAccount = mongoose.model('UserAcout');
+const UserAccount = mongoose.model('UserAccount');
 
 const signinCtrl = function (req, res) {
     const requestBody = req.body;
