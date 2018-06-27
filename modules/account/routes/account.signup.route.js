@@ -1,3 +1,10 @@
 'use strict';
 
-let accountCtrl = require('../controllers');
+const accountCtrl = require('../controllers');
+
+module.exports = function (router) {
+    router.post('/register', accountCtrl);
+};
+
+
+

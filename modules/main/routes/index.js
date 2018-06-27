@@ -1,4 +1,7 @@
 'use strict';
 
-const router = require('express').Router();
-module.exports
+let router = require('express').Router();
+
+require('../../account/routes')(router);
+
+module.exports = router;

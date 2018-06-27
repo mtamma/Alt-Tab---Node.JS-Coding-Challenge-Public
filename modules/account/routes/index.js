@@ -1,4 +1,6 @@
 'use strict';
 
-let accountSignin = require('./account.signin.route');
-let accountSignup = require('./account.signup.route');
+module.exports = function (router) {
+    require('./account.signin.route')(router);
+    require('./account.signup.route')(router);
+};
