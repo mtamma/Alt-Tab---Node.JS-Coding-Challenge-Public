@@ -1,7 +1,7 @@
 'use strict';
 
-const profileCtrl = require('../controllers');
+const profileCtrl = require('../controllers').profileCtrl;
 
-module.exports = functio (router, auth) {
+module.exports = function (router, auth) {
     router.get('/profile', profileCtrl);
 };

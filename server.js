@@ -22,6 +22,5 @@ server.on('error', function (err) {
             break;
         default:
             throw error;
-        }
     }
 });

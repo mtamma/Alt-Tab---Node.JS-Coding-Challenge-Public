@@ -39,7 +39,7 @@ userAccountSchema.methods.setPassword = function (password) {
     this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, null).toString('hex');
 };
 
-userAccountSchema.methodes.isValidPassword = function (password) {
+userAccountSchema.methods.isValidPassword = function (password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, null).toString('hex');
     return this.hash === hash;
 }

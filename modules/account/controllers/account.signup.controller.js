@@ -1,4 +1,5 @@
 'use strict';
+
 const async = require('async');
 const mongoose = require('mongoose');
 const UserAccount = mongoose.model('UserAccount');
@@ -41,11 +42,11 @@ const signupCtrl = function (req, res) {
             statusCode = ErrorStatus.USER_EMAIL_IS_USED.httpStatusCode;
             responseObject = ErrorStatus.USER_EMAIL_NOT_SPECIFIED;
             error = true;
-        } elseif (isPasswordSpecified(accountData)) {
+        } else if (isPasswordSpecified(accountData)) {
             statusCode = ErrorStatus.USER_PASSWORD_NOT_SPECIFIED.httpStatusCode;
             responseObject = ErrorStatus.USER_PASSWORD_NOT_SPECIFIED;
             error = true;
-        } elseif (isEmailBeenUsed(accountData)) {
+        } else if (isEmailBeenUsed(accountData)) {
             statusCode = ErrorStatus.USER_EMAIL_IS_USED.httpStatusCode;
             responseObject = ErrorStatus.USER_EMAIL_IS_USED;
             error = true;
@@ -62,7 +63,7 @@ const signupCtrl = function (req, res) {
     const saveAccountDataFn = function (callback) {
         const callbackFn = function (err, result) {
             const responseObject = {
-                token = result.token
+                token: result.token
             };
             res.status(201);
             res.json(responseObject);

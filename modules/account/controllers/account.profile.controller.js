@@ -1,6 +1,6 @@
 'use strict';
 
-let profileCtrl = function (req, res) {
+const profileCtrl = function (req, res) {
 
 };
 
