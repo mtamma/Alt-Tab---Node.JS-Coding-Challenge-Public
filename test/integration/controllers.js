@@ -8,7 +8,7 @@ let _user = 'integration_test_' + Math.floor(Date.now() / 1000) + '@alttab.co';
 
 describe('Authentication Controller', () => {
 
-  it('should register a new user and return token', () => {
+  it('should register a new user and return token', (done) => {
     let _token = null;
 
     return request(app)
@@ -22,8 +22,9 @@ describe('Authentication Controller', () => {
       .then((data) => {
         _token = data.body.token;
         assert.ok(_token);
+        done();
       });
-  });
+  }).timeout(5000);
 
   it('should login existing User', () => {
     let _token = null;
@@ -38,7 +39,7 @@ describe('Authentication Controller', () => {
         _token = data.body.token;
         assert.ok(_token);
       });
-  });
+  }).timeout();
 
   it('should return an error bad request if email is used', () => {
     return request(app)

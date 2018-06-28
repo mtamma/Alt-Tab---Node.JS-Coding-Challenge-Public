@@ -17,9 +17,16 @@ const localStrategy = new LocalStrategy({
             return;
         }
 
+        if (!result) {
+            callback(null, null, {
+                message: 'User not found'
+            });
+            return;
+        }
+
         if (!result.isValidPassword(password)) {
             callback(null, null, {
-                'message': 'invalid password'
+                message: 'invalid password'
             });
             return;
         }
