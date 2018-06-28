@@ -1,0 +1,25 @@
+'use strict';
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const mongoose = require('mongoose');
+const UserAccount = mongoose.model('UserAccount');
+
+const localStrategy = new LocalStrategy({
+    usernameField: 'email'
+}, function (email, password, callback) {
+    const query = {
+        email: email
+    };
+    const callbackFn = function (err, result) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        callback(null, result);
+    };
+    UserAccount.findOne(query, callbackFn);
+});
+
+passport.use(localStrategy);

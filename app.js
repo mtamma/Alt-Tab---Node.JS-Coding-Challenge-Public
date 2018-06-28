@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 global._ = require('lodash');
 
 require('./modules/main/model');
+require('./modules/main/setup/passport');
 const routes = require('./modules/main/routes');
 let app = express();
 

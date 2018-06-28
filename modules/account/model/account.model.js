@@ -47,9 +47,10 @@ userAccountSchema.methods.isValidPassword = function (password) {
 
 userAccountSchema.methods.generateJwt = function () {
     const expiredDate = new Date();
-    expiredDate.setDate(date.getDate() + 7);
+    expiredDate.setDate(expiredDate.getDate() + 7);
 
     return jsonwebtoken.sign({
+        _id: this._id,
         email: this.email,
         name: this.name,
         expired: parseInt(expiredDate.getTime()/1000)

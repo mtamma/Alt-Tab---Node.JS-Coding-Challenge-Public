@@ -1,8 +1,12 @@
 'use strict';
 
 const router = require('express').Router();
-const jwt = require('express-jwt');
+const expressJwt = require('express-jwt');
 
-require('../../account/routes')(router);
+const auth = expressJwt({
+    secret: 'TEMPORARY_PASS',
+    userProperty: 'payload'
+});
+require('../../account/routes')(router, auth);
 
 module.exports = router;

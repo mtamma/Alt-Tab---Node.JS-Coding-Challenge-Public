@@ -11,7 +11,7 @@ const isEmailBeenUsed = function (data, callback) {
         email: data.email
     };
     const callbackFn = function (err, account) {
-        if (!_.isEmpty(account)) {
+        if (_.isEmpty(account)) {
             callback();
             return;
         }
@@ -54,6 +54,7 @@ const signupCtrl = function (req, res) {
         if (error) {
             res.status(statusCode)
             res.json(responseObject);
+            callback(error);
             return;
         }
 
@@ -63,6 +64,7 @@ const signupCtrl = function (req, res) {
                 responseObject = ErrorStatus.USER_EMAIL_IS_USED;
                 res.status(statusCode);
                 res.json(responseObject);
+                callback(err);
                 return;
             }
             callback();
@@ -70,6 +72,7 @@ const signupCtrl = function (req, res) {
     };
 
     const saveAccountDataFn = function (callback) {
+        let account = new UserAccount();
         const callbackFn = function (err) {
             if (err) {
                 const statusCode = ErrorStatus.UNEXPECTED.httpStatusCode;
@@ -77,6 +80,7 @@ const signupCtrl = function (req, res) {
                 res.json({
                     'err': err
                 });
+                callback(err);
                 return;
             }
 
@@ -88,7 +92,6 @@ const signupCtrl = function (req, res) {
             callback();
         };
 
-        let account = new UserAccount();
         account.name = accountData.name;
         account.email = accountData.email;
         account.token = shortid.generate();
