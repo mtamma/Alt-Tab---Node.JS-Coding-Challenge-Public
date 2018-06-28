@@ -14,6 +14,10 @@ const profileCtrl = function (req, res) {
     }
     const callbackFn = function (err, result) {
         if (err) {
+            res.status(400);
+            res.json({
+                err: err
+            });
             return;
         }
         const responseObject = {
