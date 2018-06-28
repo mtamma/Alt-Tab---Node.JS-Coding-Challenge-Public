@@ -2,30 +2,33 @@
 
 const async = require('async');
 const mongoose = require('mongoose');
+const shortid = require('shortid');
 const UserAccount = mongoose.model('UserAccount');
 const ErrorStatus = require('./account.error');
 
-const isEmailBeenUsed = function (data) {
+const isEmailBeenUsed = function (data, callback) {
     const query = {
         email: data.email
     };
     const callbackFn = function (err, account) {
-        if (account) {
-            return true;
+        if (!_.isEmpty(account)) {
+            callback();
+            return;
         }
-        return false;
+
+        callback(true);
     }
     UserAccount.findOne(query, callbackFn);
 };
 
 const isEmailSpecified = function (data) {
     const email = data.email;
-    return _.isEmpty(email);
+    return !_.isEmpty(email);
 };
 
 const isPasswordSpecified = function (data) {
     const password = data.password;
-    return _.isEmpty(password);
+    return !_.isEmpty(password);
 };
 
 const signupCtrl = function (req, res) {
@@ -38,39 +41,61 @@ const signupCtrl = function (req, res) {
     const validateAccountDataFn = function (callback) {
         let error = false;
         let statusCode, responseObject;
-        if (isEmailSpecified(accountData)) {
+        if (!isEmailSpecified(accountData)) {
             statusCode = ErrorStatus.USER_EMAIL_IS_USED.httpStatusCode;
             responseObject = ErrorStatus.USER_EMAIL_NOT_SPECIFIED;
             error = true;
-        } else if (isPasswordSpecified(accountData)) {
+        } else if (!isPasswordSpecified(accountData)) {
             statusCode = ErrorStatus.USER_PASSWORD_NOT_SPECIFIED.httpStatusCode;
             responseObject = ErrorStatus.USER_PASSWORD_NOT_SPECIFIED;
             error = true;
-        } else if (isEmailBeenUsed(accountData)) {
-            statusCode = ErrorStatus.USER_EMAIL_IS_USED.httpStatusCode;
-            responseObject = ErrorStatus.USER_EMAIL_IS_USED;
-            error = true;
-        } 
-
+        }
+        
         if (error) {
             res.status(statusCode)
             res.json(responseObject);
             return;
         }
-        callback();
+
+        isEmailBeenUsed(accountData, function (err) {
+            if (err) {
+                statusCode = ErrorStatus.USER_EMAIL_IS_USED.httpStatusCode;
+                responseObject = ErrorStatus.USER_EMAIL_IS_USED;
+                res.status(statusCode);
+                res.json(responseObject);
+                return;
+            }
+            callback();
+        });
     };
 
     const saveAccountDataFn = function (callback) {
-        const callbackFn = function (err, result) {
+        const callbackFn = function (err) {
+            if (err) {
+                const statusCode = ErrorStatus.UNEXPECTED.httpStatusCode;
+                res.status(statusCode);
+                res.json({
+                    'err': err
+                });
+                return;
+            }
+
             const responseObject = {
-                token: result.token
+                token: account.generateJwt()
             };
             res.status(201);
             res.json(responseObject);
             callback();
-        }
-        UserAccount.collection.insert(accountData, callbackFn);
-    }
+        };
+
+        let account = new UserAccount();
+        account.name = accountData.name;
+        account.email = accountData.email;
+        account.token = shortid.generate();
+        account.setPassword(accountData.password);
+
+        account.save(callbackFn);
+    };
 
     async.waterfall([
         validateAccountDataFn,

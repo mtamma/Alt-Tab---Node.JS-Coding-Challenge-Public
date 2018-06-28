@@ -1,6 +1,12 @@
 'use strict';
 
 const ERROR = Object.freeze({
+    UNEXPECTED: {
+        errorCode: 1,
+        httpStatusCode: 500,
+        errorMessage: 'Represents an error that doesn\'t fall into any other category.',
+        description: 'All'
+    },
     USER_EMAIL_IS_USED: {
         errorCode: 211,
         httpStatusCode: 400,

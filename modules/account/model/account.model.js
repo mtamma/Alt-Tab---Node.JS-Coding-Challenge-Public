@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const jsonwebtoken = require('jsonwebtoken');
 
 const userAccountSchema = new mongoose.Schema({
     name: {
@@ -42,6 +43,17 @@ userAccountSchema.methods.setPassword = function (password) {
 userAccountSchema.methods.isValidPassword = function (password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, null).toString('hex');
     return this.hash === hash;
-}
+};
+
+userAccountSchema.methods.generateJwt = function () {
+    const expiredDate = new Date();
+    expiredDate.setDate(date.getDate() + 7);
+
+    return jsonwebtoken.sign({
+        email: this.email,
+        name: this.name,
+        expired: parseInt(expiredDate.getTime()/1000)
+    }, 'TEMPORARY_PASS');
+};
 
 mongoose.model('UserAccount', userAccountSchema);
