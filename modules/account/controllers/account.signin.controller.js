@@ -4,7 +4,7 @@ const passport = require('passport');
 const ErrorStatus = require('./account.error');
 
 const signinCtrl = function (req, res) {
-    const callbackFn = function (err, result) {
+    const callbackFn = function (err, result, message) {
         if (err) {
             res.status(404);
             res.json({
@@ -12,11 +12,18 @@ const signinCtrl = function (req, res) {
             });
             return;
         }
-        const token = result.generateJwt();
-        res.status(200);
-        res.json({
-            token: token
-        });
+
+        if (result) {
+            const token = result.generateJwt();
+            res.status(200);
+            res.json({
+                token: token
+            });
+            return;
+        }
+
+        res.status(401);
+        res.json(message);
     }
     passport.authenticate('local', callbackFn)(req, res);
 };

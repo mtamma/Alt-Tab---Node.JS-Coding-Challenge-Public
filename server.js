@@ -1,11 +1,11 @@
 'use strict';
 
-let app = require('../app');
+let app = require('./app');
 let http = require('http');
 const port = '3030';
+let server = http.createServer(app);
 server.listen(port);
 app.set('port', port);
-let server = http.createServer(app);
 server.listen(port);
 server.on('error', function (err) {
     const bind = typeof port === 'string' ? `Pipe ${ port }` : `Port ${ port }`;

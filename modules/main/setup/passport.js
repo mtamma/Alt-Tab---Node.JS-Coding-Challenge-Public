@@ -17,6 +17,13 @@ const localStrategy = new LocalStrategy({
             return;
         }
 
+        if (!result.isValidPassword(password)) {
+            callback(null, null, {
+                'message': 'invalid password'
+            });
+            return;
+        }
+
         callback(null, result);
     };
     UserAccount.findOne(query, callbackFn);
